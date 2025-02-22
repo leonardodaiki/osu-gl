@@ -1,11 +1,11 @@
 #include <GL/gl.h>
+#include <iostream>
 #define GL_SILENCE_DEPRECATION
 
 #include <stdlib.h>
-#include <chrono>
 #include <math.h>
-#include <iostream>
 #include "opengl.hpp"
+#include "input.hpp"
 #include "game.hpp"
 #include "serialization.hpp"
 
@@ -18,7 +18,8 @@ int main(void) {
     std::vector<Circle> map_circles = deserialize_osu("anoyo.osu", screen_width, screen_height);
     Beatmap map(map_circles);
 
-    Game game(map);
+    Game game(window, map);
+    Input input(GLFW_KEY_Z, GLFW_KEY_X, window);
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -26,6 +27,13 @@ int main(void) {
         game.get_current_time();
         game.get_active_circles();
         game.render_circles();
+        input.update_get_status();
+        if(input.key_one) {
+            game.key_press();
+        }
+        if(input.key_two) {
+            game.key_press();
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

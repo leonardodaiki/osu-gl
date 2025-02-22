@@ -75,8 +75,6 @@ std::vector<Circle> deserialize_osu(const std::string& filename, const int scree
         circle.x = buffer_area + (circle.x * (float)usableWidth / osu_max_x);
         circle.y = buffer_area + (circle.y * (float)usableHeight / osu_max_y);
 
-        std::cout << circle.x << " " << circle.y << std::endl;
-
         circle.new_combo = 0; 
 
         circles.push_back(circle);

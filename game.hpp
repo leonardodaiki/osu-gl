@@ -27,16 +27,19 @@ struct Beatmap {
 
 struct Game {
     std::chrono::steady_clock::time_point start_time;
-    //GLFWwindow* window;
+    GLFWwindow* window;
     std::vector<Circle> active_circles;
+
     Beatmap map;
     int clock;
     
-    Game(Beatmap map_) : start_time(std::chrono::steady_clock::now()), map(map_), clock(0) {}
+    Game(GLFWwindow* window_, Beatmap map_) : start_time(std::chrono::steady_clock::now()), window(window_), map(map_), clock(0) {}
     int get_current_time();
     int get_active_circles();
     int render_circles();
     int draw_circle(Circle c);
+
+    int key_press();
 };
 
 #endif
