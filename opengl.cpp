@@ -6,7 +6,6 @@
 #include <math.h>
 #include "stb_image.h"
 
-cubeTexture = loadTexture("your_texture_file.jpg"); // Provide your texture image file
 
 void draw_symmetric_circ_points(int xC, int yC, int x, int y) {
     glVertex2f((float)(xC + x), (float)(yC + y));
