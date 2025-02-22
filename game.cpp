@@ -25,8 +25,10 @@ int Game::get_active_circles() {
         }
     }
 
-    if(clock >= active_circles.front().timestamp + 100) {
-        active_circles.erase(active_circles.begin());
+    if(!active_circles.empty()) {
+        if(clock >= active_circles.front().timestamp + 100) {
+            active_circles.erase(active_circles.begin());
+        }
     }
 
     return 0;
@@ -45,18 +47,26 @@ int Game::render_circles() {
 }
 
 int Game::draw_circle(Circle c) {
-    gl_draw_circle(c.x, c.y, map.circle_size * 20); 
+    glColor3f(1, 1, 1);
+    gl_draw_filled_circle(c.x, c.y, map.circle_size * 20); 
+    glColor3f(0.7, 0.30, 0.40);
+    gl_draw_filled_circle(c.x, c.y, map.circle_size * 20 * 0.92); 
+    glColor3f(1, 1, 1);
 
     int approach_circle_radius = 0;
     if(c.timestamp - clock >= 0) {
         approach_circle_radius = c.timestamp - clock;
     }
-    gl_draw_circle(c.x, c.y, map.circle_size * 20 + approach_circle_radius * 0.18); 
+    gl_draw_circle(c.x, c.y, map.circle_size * 20 + approach_circle_radius * 0.18, 4); 
 
     return 0;
 }
 
 int Game::key_press() {
+    if(active_circles.empty()) {
+        return 0;
+    }
+
     double x;
     double y;
     glfwGetCursorPos(window, &x, &y);
@@ -68,16 +78,10 @@ int Game::key_press() {
     double dist_x = x - c.x;
     double dist_y = y - c.y;
 
-
-    std::cout << "cursor pos: " << x << " " << y << std::endl;
-    std::cout << "next circle pos: " << c.x << " " << c.y << std::endl;
-    std::cout << "distance: " << dist_x << " " << dist_y << std::endl;
-    std::cout << sqrt((dist_x * dist_x) + (dist_y * dist_y)) << std::endl;
-    std::cout << map.circle_size * 20 << std::endl;
-    
     if(clock >= c.timestamp - 700 && clock <= c.timestamp + 100) {
         if(sqrt((dist_x * dist_x) + (dist_y * dist_y)) <= map.circle_size * 20) {
-            std::cout << " ERASED " << std::endl;
+            audio.play_hitsound();
+            score += 100;
             if(!active_circles.empty()) {
                 active_circles.erase(active_circles.begin());
             }   

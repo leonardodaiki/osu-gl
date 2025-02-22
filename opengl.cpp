@@ -1,5 +1,8 @@
+#include <GL/freeglut_std.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
+#include <GL/glut.h>
+#include "opengl.hpp"
 #include <math.h>
 
 void draw_symmetric_circ_points(int xC, int yC, int x, int y) {
@@ -13,25 +16,42 @@ void draw_symmetric_circ_points(int xC, int yC, int x, int y) {
     glVertex2f((float)(xC - y), (float)(yC - x));
 }
 
-void gl_draw_circle(int xC, int yC, int r) {
-    int x = 0;
-    int y = r;
-
-    int p = 1 - r;
-
-    glBegin(GL_POINTS);
-    draw_symmetric_circ_points(xC, yC, x, y);
-    while (x < y) {
-        x++;
-        if (p > 0) {
-            y--;
-            p += 2 * x - 2 * y + 1;
-        } else {
-            p += 2 * x + 1;
+void gl_draw_circle(int xC, int yC, int r, int t) {
+    glColor3f(1, 1, 1);
+    int num_segments = 100;
+    for (int i = 0; i < t; i++) {  // Draw multiple rings for thickness
+        float radius = r + i;
+        glBegin(GL_LINE_LOOP);
+        for (int j = 0; j < num_segments; j++) {
+            float theta = 2.0f * M_PI * j / num_segments;
+            float x = radius * cos(theta);
+            float y = radius * sin(theta);
+            glVertex2f(xC + x, yC + y);
         }
-        draw_symmetric_circ_points(xC, yC, x, y);
+        glEnd();
     }
+}
+
+void gl_draw_filled_circle(int xC, int yC, int r) {
+    int num_segments = 100;
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(xC, yC);
+
+    for (int i = 0; i <= num_segments; i++) {
+        float theta = 2.0f * M_PI * i / num_segments;
+        float x = r * cos(theta);
+        float y = r * sin(theta);
+        glVertex2f(xC + x, yC + y);
+    }
+    
     glEnd();
+}
+
+void render_text(std::string text, float x, float y) {
+    glRasterPos2f(x, y);
+    for (char c : text) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
 }
 
 GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
@@ -54,4 +74,52 @@ GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
     glOrtho(0, resolution_x, 0, resolution_y, -1, 1);
     
     return window;
+}
+
+void drawCube() {
+    glBegin(GL_QUADS);
+
+    // Front Face
+    glColor3f(1.0f, 0.0f, 0.0f);  // Red
+    glVertex3f(-0.5f, -0.5f,  0.5f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
+    glVertex3f( 0.5f,  0.5f,  0.5f);
+    glVertex3f(-0.5f,  0.5f,  0.5f);
+
+    // Back Face
+    glColor3f(0.0f, 1.0f, 0.0f);  // Green
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f,  0.5f, -0.5f);
+    glVertex3f( 0.5f,  0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f, -0.5f);
+
+    // Top Face
+    glColor3f(0.0f, 0.0f, 1.0f);  // Blue
+    glVertex3f(-0.5f,  0.5f, -0.5f);
+    glVertex3f(-0.5f,  0.5f,  0.5f);
+    glVertex3f( 0.5f,  0.5f,  0.5f);
+    glVertex3f( 0.5f,  0.5f, -0.5f);
+
+    // Bottom Face
+    glColor3f(1.0f, 1.0f, 0.0f);  // Yellow
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
+    glVertex3f(-0.5f, -0.5f,  0.5f);
+
+    // Right Face
+    glColor3f(1.0f, 0.0f, 1.0f);  // Magenta
+    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glVertex3f( 0.5f,  0.5f, -0.5f);
+    glVertex3f( 0.5f,  0.5f,  0.5f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
+
+    // Left Face
+    glColor3f(0.0f, 1.0f, 1.0f);  // Cyan
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f, -0.5f,  0.5f);
+    glVertex3f(-0.5f,  0.5f,  0.5f);
+    glVertex3f(-0.5f,  0.5f, -0.5f);
+
+    glEnd();
 }

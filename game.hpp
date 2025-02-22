@@ -1,9 +1,11 @@
 #ifndef GAME_H 
 #define GAME_H 
 
+#include <string>
 #include <vector>
 #include <chrono>
 #include <GLFW/glfw3.h>
+#include "audio.hpp"
 
 struct Circle {
     int x;
@@ -27,13 +29,15 @@ struct Beatmap {
 
 struct Game {
     std::chrono::steady_clock::time_point start_time;
-    GLFWwindow* window;
     std::vector<Circle> active_circles;
+    GLFWwindow* window;
+    Audio audio;
+    int score;
 
     Beatmap map;
     int clock;
     
-    Game(GLFWwindow* window_, Beatmap map_) : start_time(std::chrono::steady_clock::now()), window(window_), map(map_), clock(0) {}
+    Game(GLFWwindow* window_, Beatmap map_, std::string music_file_name_) : start_time(std::chrono::steady_clock::now()), window(window_), map(map_), clock(0), audio(music_file_name_), score(0) { audio.play_music(); }
     int get_current_time();
     int get_active_circles();
     int render_circles();

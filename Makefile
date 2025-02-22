@@ -1,3 +1,3 @@
 main:
-	g++ *.cpp glad.c -o osu -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -g
+	g++ *.cpp glad.c -o osu -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lm -lglut -lGLU -g
 
