@@ -4,6 +4,9 @@
 #include <GL/glut.h>
 #include "opengl.hpp"
 #include <math.h>
+#include "stb_image.h"
+
+cubeTexture = loadTexture("your_texture_file.jpg"); // Provide your texture image file
 
 void draw_symmetric_circ_points(int xC, int yC, int x, int y) {
     glVertex2f((float)(xC + x), (float)(yC + y));
@@ -77,6 +80,14 @@ GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
 }
 
 void drawCube() {
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -5.0f);  // Move cube back
+
+    static float angle = 0.0f;
+    angle += 0.5f; // Rotate slightly every frame
+
+    glRotatef(angle, 1.0f, 1.0f, 0.0f);
+
     glBegin(GL_QUADS);
 
     // Front Face
@@ -122,4 +133,23 @@ void drawCube() {
     glVertex3f(-0.5f,  0.5f, -0.5f);
 
     glEnd();
+}
+
+void enable3D(int resolution_x, int resolution_y) {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (double)resolution_x / (double)resolution_y, 0.1, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glEnable(GL_DEPTH_TEST);
+}
+
+
+void enable2D(int resolution_x, int resolution_y) {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, resolution_x, 0, resolution_y, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
 }

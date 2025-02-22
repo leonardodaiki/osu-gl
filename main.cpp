@@ -33,7 +33,13 @@ int main(int argc, char** argv) {
     Input input(GLFW_KEY_Z, GLFW_KEY_X, window);
 
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        enable3D(screen_width, screen_height);
+
+        drawCube();
+
+        enable2D(screen_width, screen_height);
 
         game.get_current_time();
         game.get_active_circles();
