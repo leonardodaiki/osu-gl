@@ -37,7 +37,7 @@ struct Game {
     Beatmap map;
     int clock;
     
-    Game(GLFWwindow* window_, Beatmap map_, std::string music_file_name_) : start_time(std::chrono::steady_clock::now()), window(window_), map(map_), clock(0), audio(music_file_name_), score(0) { audio.play_music(); }
+    Game(GLFWwindow* window_, Beatmap map_, std::string music_file_name_) : start_time(), window(window_), map(map_), clock(-100), audio(music_file_name_), score(0) {}
     int get_current_time();
     int get_active_circles();
     int render_circles();

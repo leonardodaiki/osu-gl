@@ -37,11 +37,12 @@ int Game::get_active_circles() {
 int Game::render_circles() {
     if(active_circles.empty()) return 0;
 
-    for(Circle c : active_circles) {
-        if(clock >= c.timestamp - 700 && clock <= c.timestamp + 100){
-            draw_circle(c); 
-        }
+for (auto it = active_circles.rbegin(); it != active_circles.rend(); ++it) {
+    Circle& c = *it;
+    if (clock >= c.timestamp - 700 && clock <= c.timestamp + 100) {
+        draw_circle(c);
     }
+}
 
     return 0;
 }

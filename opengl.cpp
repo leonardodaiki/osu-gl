@@ -1,27 +1,17 @@
 #include <GL/freeglut_std.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <GL/glut.h>
 #include "opengl.hpp"
 #include <math.h>
+#include <cmath>
 #include "stb_image.h"
-
-
-void draw_symmetric_circ_points(int xC, int yC, int x, int y) {
-    glVertex2f((float)(xC + x), (float)(yC + y));
-    glVertex2f((float)(xC - x), (float)(yC + y));
-    glVertex2f((float)(xC + x), (float)(yC - y));
-    glVertex2f((float)(xC - x), (float)(yC - y));
-    glVertex2f((float)(xC + y), (float)(yC + x));
-    glVertex2f((float)(xC - y), (float)(yC + x));
-    glVertex2f((float)(xC + y), (float)(yC - x));
-    glVertex2f((float)(xC - y), (float)(yC - x));
-}
 
 void gl_draw_circle(int xC, int yC, int r, int t) {
     glColor3f(1, 1, 1);
     int num_segments = 100;
-    for (int i = 0; i < t; i++) {  // Draw multiple rings for thickness
+    for (int i = 0; i < t; i++) {
         float radius = r + i;
         glBegin(GL_LINE_LOOP);
         for (int j = 0; j < num_segments; j++) {
@@ -78,59 +68,16 @@ GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
     return window;
 }
 
-void drawCube() {
-    glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -5.0f);  // Move cube back
+float getRotationSpeed(float bpm) {
+    return bpm / 60.0f;  // BPM to rotations per second
+}
 
-    static float angle = 0.0f;
-    angle += 0.5f; // Rotate slightly every frame
-
-    glRotatef(angle, 1.0f, 1.0f, 0.0f);
-
+void gl_draw_rect(int x, int y, int width, int height) {
     glBegin(GL_QUADS);
-
-    // Front Face
-    glColor3f(1.0f, 0.0f, 0.0f);  // Red
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-
-    // Back Face
-    glColor3f(0.0f, 1.0f, 0.0f);  // Green
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-
-    // Top Face
-    glColor3f(0.0f, 0.0f, 1.0f);  // Blue
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-
-    // Bottom Face
-    glColor3f(1.0f, 1.0f, 0.0f);  // Yellow
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-
-    // Right Face
-    glColor3f(1.0f, 0.0f, 1.0f);  // Magenta
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-
-    // Left Face
-    glColor3f(0.0f, 1.0f, 1.0f);  // Cyan
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-
+    glVertex2f(x, y);
+    glVertex2f(x + width, y);
+    glVertex2f(x + width, y + height);
+    glVertex2f(x, y + height);
     glEnd();
 }
 
