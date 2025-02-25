@@ -8,6 +8,7 @@ void gl_draw_circle(int xC, int yC, int r, int t);
 void gl_draw_filled_circle(int xC, int yC, int r);
 void gl_draw_rect(int x, int y, int width, int height);
 void render_text(std::string text, float x, float y);
+void render_text(std::string text, float x, float y, float scale);
 
 void drawCube();
 void enable3D(int resolution_x, int resolution_y);

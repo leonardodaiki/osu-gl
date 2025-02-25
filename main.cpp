@@ -8,7 +8,6 @@
 #define MINIAUDIO_IMPLEMENTATION
 
 #include <stdlib.h>
-#include <SDL2/SDL.h>
 #include <math.h>
 #include "opengl.hpp"
 #include "input.hpp"
@@ -18,7 +17,7 @@
 #include "menu.hpp"
 
 int main(int argc, char** argv) {
-    std::string song_name = "lost";
+    std::string song_name = "bluenation";
 
     std::string music_file_name = "./maps/" + song_name + ".wav";
     std::string circles_file_name = "./maps/" + song_name + ".osu";
@@ -32,12 +31,15 @@ int main(int argc, char** argv) {
 
     std::vector<Circle> map_circles = deserialize_osu(circles_file_name, screen_width, screen_height);
     Beatmap map(map_circles);
-    serialize_circles(map_circles, "bluenation_debug");
     Game game(window, map, music_file_name);
     Input input(GLFW_KEY_Z, GLFW_KEY_X, window);
 
     int on_menu = 1;
     int sound_playing = 0;
+
+    ma_sound sound;
+    ma_sound_init_from_file(&game.audio.engine, "circles.wav", 0, NULL, NULL, &sound);
+    ma_sound_start(&sound);
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -46,6 +48,7 @@ int main(int argc, char** argv) {
             on_menu = draw_menu(screen_width, screen_height, window);
         } else {
             if(sound_playing == 0) {
+                ma_sound_stop(&sound);
                 game.clock = 0;
                 game.start_time = std::chrono::steady_clock::now();
                 game.audio.play_music();

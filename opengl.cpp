@@ -6,7 +6,6 @@
 #include "opengl.hpp"
 #include <math.h>
 #include <cmath>
-#include "stb_image.h"
 
 void gl_draw_circle(int xC, int yC, int r, int t) {
     glColor3f(1, 1, 1);
@@ -40,12 +39,34 @@ void gl_draw_filled_circle(int xC, int yC, int r) {
 }
 
 void render_text(std::string text, float x, float y) {
-    glRasterPos2f(x, y);
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    glScalef(1, 1, 1);
+
     for (char c : text) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
     }
+
+    glPopMatrix();
 }
 
+void render_text(std::string text, float x, float y, float scale) {
+    glPushMatrix();
+
+    float text_width = 0.0f;
+    for (char c : text) {
+        text_width += glutStrokeWidth(GLUT_STROKE_ROMAN, c) * scale;
+    }
+
+    glTranslatef(x - text_width / 2.0f, y, 0);
+    glScalef(scale, scale, scale);
+
+    for (char c : text) {
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
+    }
+
+    glPopMatrix();
+}
 GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
     GLFWwindow* window;
 
@@ -66,10 +87,6 @@ GLFWwindow* init_opengl(int resolution_x, int resolution_y) {
     glOrtho(0, resolution_x, 0, resolution_y, -1, 1);
     
     return window;
-}
-
-float getRotationSpeed(float bpm) {
-    return bpm / 60.0f;  // BPM to rotations per second
 }
 
 void gl_draw_rect(int x, int y, int width, int height) {
